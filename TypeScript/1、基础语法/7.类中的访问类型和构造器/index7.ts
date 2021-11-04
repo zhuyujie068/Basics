@@ -5,7 +5,19 @@
     public（默认）   公开        允许在类内外被调用
 */
 
+/*
+    只读修饰符
+        public 修饰的属性既公开可见，又可以更改值，如果我们不希望类的属性被更改，则可以使用 readonly 只读修饰符声明类的属性
 
+        class Son {
+            public readonly firstName: string;
+            constructor(firstName: string) {
+                this.firstName = firstName;
+            }
+        }   
+
+        const son = new Son('Tony');
+ */
 
 
 

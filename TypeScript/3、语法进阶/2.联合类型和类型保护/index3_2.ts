@@ -13,7 +13,15 @@ interface Dog {
 // 类型保护，当使用 联合类型 时，编辑器会不确定传递参数的类型从而会发出警告，通过一系列的 判断与类型确认，让编辑器不报警告与错误
 function trainAnial(animal: Bird | Dog) {
     // 方法一：我们可以通过 类型断言 和 对逻辑的理解，去确保代码不再提错
-    // 类型断言这种方式可以告诉编译器，“相信我，我知道自己在干什么”。
+
+    /*
+        类型断言
+            类型断言（类似仅作用在类型层面的强制类型转换），用一种笃定的方式，告诉 TypeScript 按照我们的方式做类型检查 （ 类型断言，用于给告诉TypeScript某个值你非常确定是你断言的类型，而不是TS推测出来的类型。 ）。
+
+        双重断言
+             A 不能直接断言成 B，就需要双重断言。
+     */
+
     if (animal.fly) {
         (animal as Bird).sing();
     } else {
@@ -36,7 +44,7 @@ function trainAnialSecond(animal: Bird | Dog) {
 
 
 // 方法三：通过 typeof 语法 来做类型保护 
-function add(first: string | number, second: string | number) {
+function add6(first: string | number, second: string | number) {
     if (typeof first === 'string' || typeof second === 'string') {
         return `${first}${second}`
     }
@@ -59,5 +67,11 @@ function addSecond(first: object | NumberObj, second: object | NumberObj) {
 
 
 
+// this
+// 在 TypeScript 中，我们只需要在函数的第一个参数中声明 this 指代的对象（即函数被调用的方式）即可，比如最简单的作为对象的方法的 this 指向，如下代码所示：
 
-
+function say(this: Window, name: string) {
+    console.log(this.name);
+}
+window.say = say;
+window.say('hi');

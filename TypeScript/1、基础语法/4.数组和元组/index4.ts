@@ -68,3 +68,5 @@ const teacherList: [string, string, number][] = [
     ['sun', 'female', 26],
     ['jeny', 'male', 38]
 ]
+
+// 注： ts 的元组无法在运行时约束所谓的 “元组” 像真正的元组一样保证元素类型、长度不可变更
