@@ -49,8 +49,8 @@
 
             function handleClick(){
                 emit('change') // 触发 父组件 change 事件
-            }
-
+            } 
+ 
             return {}
         },
 
@@ -105,7 +105,7 @@
 
 ## reactive 处理非基础类型的数据
 
-       reactive() 将 引用类型 处理成为 响应式引用 ，如果将其 进行 解构 的值放在 页面上是不会具备 响应式 。需要先将 对象 通过 reactive() 处理 成 响应式引用 再通过 toRefs() 对其进行处理 后 对 其进行 解构 放在 页面上才具备响应式
+       reactive() 将 引用类型 处理成为 响应式引用 如果将其 进行 解构 的值放在 页面上是不会具备 响应式 。需要先将 对象 通过 reactive() 处理 成 响应式引用 再通过 toRefs() 对其进行处理 后 对 其进行 解构 放在 页面上才具备响应式（props 是响应式的，使用 ES6 解构，它会消除 prop 的响应性，如果需要解构需要用 toRefs）
 
 ```JavaScript
     const app=Vue.createApp({
@@ -416,7 +416,7 @@
 
             const refName=ref(null); // 此 变量名 必须 与需要获取 DOM 中的 ref 值 一致
 
-            OnMounted(()=>{
+            OnMounted(()=>{ 
                 console.log(refName.value) // 获取 DOM 
             })
 
