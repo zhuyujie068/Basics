@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        /*
+        call 和 apply 的共同点
+            1.都能够改变函数执行时的上下文，将一个对象的方法交给另一个对象来执行，并且是立即执行的。
+            2.它的调用者必须是函数 Function
+            3.第一个参数，是一个对象。 Function 的调用者，将会指向这个对象。如果不传，则默认为全局对象 window。
+
+
+        call 和 apply 的不同点
+            call： 第二个参数开始，可以接收任意个参数。每个参数会映射到相应位置的 Function 的参数上
+            apply：第二个参数，必须是数组或者类数组，它们会被转换成类数组，传入 Function 中，并且会被映射到 Function 对应的参数上
+        
+        
+        call 、apply 和 bind 的共同点
+            1.都能够改变函数执行时的上下文
+
+
+        call 、apply 和 bind 的不同点
+            1. bind： 创建一个新的函数，在调用时设置 this 关键字为提供的值。并在调用新函数时，将给定参数列表作为原函数的参数序列的前若干项。
+
+        
+*/
+
+
+        {
+            // 手写 call 
+
+            // context 是当前传入的对象或者他想要绑定的this
+            Function.prototype.myCall = function (context) {
+
+                // 如果第一个参数传入的是 null 或者是 undefined, 那么指向this指向 window / global，否则 第一个参数必须是对象
+                var context = context || window;
+
+                context.fn = this; // this指向的是当前的函数(Function的实例)
+
+                var args = [...arguments].slice(1); // 获取除了this指向对象以外的参数, 空数组slice后返回的仍然是空数组
+
+                var result = context.fn(...args); // 隐式绑定,当前函数的this指向了context.
+                // 删除挂在实例上的方法
+                delete context.fn;
+                // 返回调用的结果值
+                return result;
+            }
+        }
+
+
+
+        {
+            // apply
+            Function.prototype.myApply = function (context) {
+                var context = context || window;
+                context.fu = this;
+                var result = null;
+
+                // 判断是否有参数传入
+                if (arguments[1]) {
+                    // 将参数进行分割
+                    result = context.fu(...arguments[1])
+                } else {
+                    result = context.fn()
+                }
+
+                delete context.fu;
+                return result;
+            }
+        }
+
+
+
+        {
+            // bind
+            Function.prototype.myBind = function (context) {
+                // if (typeof this !== "function") {
+                //     throw new TypeError("not a function");
+                // }
+                let _this = this;
+                let args = [...arguments].slice(1);
+
+                function Fn() {};
+                Fn.prototype = this.prototype;
+
+                let resutl = function () {
+                    let res = [...args, ...arguments]; //bind传递的参数和函数调用时传递的参数拼接
+                    context = this instanceof Fn ? this : context || this;
+                    return _this.apply(context, res);
+                }
+
+                //原型链
+                resutl.prototype = new Fn();
+                return resutl;
+            }
+        }
+
+
+
+        {
+            /*
+                防抖，即短时间内大量触发同一事件，只会执行一次函数，实现原理为设置一个定时器，约定在xx毫秒后再触发事件处理，每次触发事件都会重新设置计时器，直到xx毫秒内无第二次操作，防抖常用于搜索框/滚动条的监听事件处理，如果不做防抖，每输入一个字/滚动屏幕，都会触发事件处理，造成性能浪费。
+            */
+
+            function debounce(func, time) {
+                let timeout = null;
+                return function () {
+                    let context = this;
+                    let args = arguments;
+
+                    if (timeout) clearTimeout(timeout)
+
+                    timeout = setTimeout(() => {
+                        func.apply(context, args)
+                    }, time)
+                }
+            }
+
+        }
+
+
+
+        {
+            /*
+                防抖是延迟执行，而节流是间隔执行，函数节流即每隔一段时间就执行一次，实现原理为设置一个定时器，约定xx毫秒后执行事件，如果时间到了，那么执行函数并重置定时器，和防抖的区别在于，防抖每次触发事件都重置定时器，而节流在定时器到时间后再清空定时器
+            */
+            function throttle(func, time) {
+                let timeout = null;
+                return function () {
+                    let context = this;
+                    let args = arguments;
+                    if (!timeout) {
+                        timeout = setTimeout(() => {
+                            timeout = null;
+                            func.apply(context, args)
+                        }, time)
+                    }
+                }
+            }
+        }
+
+
+        {
+            // 手写 new 
+            // 生成新对象
+            // 链接到原型
+            // 绑定this
+            // 返回对象
+
+            // 参数：
+            // 1、Con：接收一个构造函数
+            // 2、args：传入构造函数的参数
+            function mynew(Con, ...args) {
+                // 创建空对象
+                let obj = {};
+                // 设置空对象的原型(链接对象的原型)
+                obj.__proto__ = Con.prototype;
+                // 绑定 this 并执行构造函数（为对象设置属性）
+                let result = Con.apply(obj, args)
+                // 如果 result 没有其他选择的对象，就返回 obj 对象
+                return result instanceof Object ? result : obj;
+            }
+
+            // 构造函数
+            function Test(name, age) {
+                this.name = name;
+                this.age = age;
+            }
+
+            Test.prototype.sayName = function () {
+                console.log(this.name)
+            }
+
+            // 实现一个 new 操作符
+            const a = mynew(Test, '小吴', '18')
+            console.log(a.age)
+        }
+
+
+        {
+            // 数组扁平化
+            // ES 的 flat()
+            const arr = [1, [1, 2],
+                [1, 2, 3]
+            ]
+            const flattened = arr.flat() // [1,1,2,1,2,3]
+
+
+            // for...of + 递归 实现
+            function flatten(arr, result = []) {
+                for (const item of arr) {
+                    if (Array.isArray(item)) {
+                        flatten(item, result)
+                    } else {
+                        result.push(item)
+                    }
+                    return result
+                }
+            }
+
+            // 递归函数则是自己调用自己本身，最常见的一个就是对象的深拷贝以及斐波那契
+        }
+
+
+
+        {
+            // 深拷贝
+            function deepClone(obj) {
+                // 判断是否为数组
+                let objClone = Array.isArray(obj) ? [] : {};
+
+                if (obj && typeof obj === "object") {
+                    for (key in obj) {
+
+                        // hasOwnProperty() 方法用来检测一个属性是否是对象的自有属性，而不是从原型链继承的。
+                        if (obj.hasOwnProperty(key)) {
+                            // 判断 obj 子元素是否为对象，如果是，递归复制
+                            if (obj[key] && typeof obj[key] === "object") {
+                                objClone[key] = deepClone(obj[key]);
+                            } else {
+                                // 如果不是，简单复制
+                                objClone[key] = obj[key];
+                            }
+                        }
+                    }
+                }
+                return objClone;
+            }
+        }
+
+
+
+
+        {
+            // 原型链继承
+            function Parent() {
+                this.name = '小吴';
+            }
+
+            Parent.prototype.getName = function () {
+                console.log(this.name)
+            }
+
+            function Child() {
+
+            }
+
+            Child.prototype = new Parent();
+
+            var child1 = new Child();
+
+            console.log(child1.getName()) // 小吴
+        }
+    </script>
+</body>
+
+</html>
