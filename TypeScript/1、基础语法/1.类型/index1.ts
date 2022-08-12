@@ -33,7 +33,7 @@
 
 
 
-/* 自定义类型 interface */
+/* 自定义类型 interface（接口） 因特肺丝 */
 
 /*
     基础类型
@@ -65,7 +65,7 @@
                 never 是所有类型的子类型，它可以给所有类型赋值，但是反过来，除了 never 自身以外，其他类型（包括 any 在内的类型）都不能为 never 类型赋值。
 
         
-        4. void
+        4. void (摸尾的)
             void 仅适用于表示没有返回值的函数。即如果该函数没有返回值，那它的类型就是 void。
                 void 类型仅可以赋值给 any 和 unknown 类型，反过来仅 any、never、undefined 可以赋值给 void。
                 
@@ -113,7 +113,7 @@ temp = '456';
 // }
 
 const func2 = (str: string) => {
-    return parseInt(str, 10)
+  return parseInt(str, 10)
 }
 
 
@@ -121,7 +121,7 @@ const func2 = (str: string) => {
 
 // 方法二：但是此方法必须对返回值进行注解，否则语法报错
 const func3: (str: string) => number = (str) => {
-    return parseInt(str, 10)
+  return parseInt(str, 10)
 }
 
 
