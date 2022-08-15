@@ -3,9 +3,14 @@ const Koa = require('koa');
 const app = new Koa(); // 创建 koa 应用
 
 
+// 引入 koa-body
+const KoaBody = require('koa-body')
+app.use(KoaBody()) // 需要在所有 路由处理 之前进行注册该中间件
+
+
 // 将 router 按模块进行拆分，发布后期维护  (多个 router 可以使用自动导入)
 // 导入 user 模块 的 router
-const userRouter = require('../router/user')
+const userRouter = require('../router/user.router')
 
 
 // 中间件，use 必须接收一个函数
