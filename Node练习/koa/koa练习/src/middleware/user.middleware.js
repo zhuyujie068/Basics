@@ -1,5 +1,8 @@
 // 拆分一个中间件层, 封装多个中间件函数，进行检验 (可以不拆，直接在 user.controller 中进行判断)
+
 const { getUerInfo } = require("../service/user.service");
+
+// 导入错误类型
 const { userFormateError, userAlreadyExited } = require("../constant/err.type");
 
 const userValidator = async (ctx, next) => {

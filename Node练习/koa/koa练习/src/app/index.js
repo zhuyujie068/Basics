@@ -12,7 +12,6 @@ app.use(KoaBody()) // 需要在所有 路由处理 之前进行注册该中间�
 // 导入 user 模块 的 router
 const userRouter = require('../router/user.router')
 
-
 // 中间件，use 必须接收一个函数
 app
   .use(userRouter.routes()) // routes()来组装匹配好的路由，返回一个合并好的中间件
@@ -27,6 +26,11 @@ app
 // .use((ctx,next)=>{
 //   ctx.body = 'hello world'
 // })
+// 
+
+// 统一的错误处理 （导入错误状态码）
+const errHandler = require('./errHandler')
+app.on('error', errHandler)
 
 
 module.exports = app

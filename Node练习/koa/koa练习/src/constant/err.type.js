@@ -1,3 +1,5 @@
+// 统一处理 提示消息
+
 module.exports = {
   userFormateError: {
     code: '10001',
