@@ -3,11 +3,11 @@
 const { getUerInfo } = require("../service/user.service");
 
 // 导入错误类型
-const { userFormateError, userAlreadyExited } = require("../constant/err.type");
+const { userFormateError, userAlreadyExited, userRegisterError } = require("../constant/err.type");
 
+// 合法性 （判断需要传入的参数是否合法）
 const userValidator = async (ctx, next) => {
   const { user_name, password } = ctx.request.body;
-  // 合法性
   if (!user_name || !password) {
     console.error("用户名或密码为空", ctx.request.body);
     ctx.app.emit("error", userFormateError, ctx);
@@ -17,11 +17,21 @@ const userValidator = async (ctx, next) => {
   await next();
 };
 
+// 合理性（判断 新增的数据是否符合 需求）
 const verifyUser = async (ctx, next) => {
-  const { user_name } = ctx.request.body; 
-  // 合理性
-  if (getUerInfo({ user_name })) {
-    ctx.app.emit("error", userAlreadyExited, ctx);
+  const { user_name } = ctx.request.body;
+
+  try {
+    const res = await getUerInfo({ user_name });
+
+    if (res) {
+      console.error("用户名已经存在", { user_name }); // console.error 的打印会写入到 服务器 日志中
+      ctx.app.emit("error", userAlreadyExited, ctx);
+      return;
+    }
+  } catch (err) {
+    console.error("获取用户信息错误", err);
+    ctx.app.emit("error", userRegisterError, ctx);
     return;
   }
 

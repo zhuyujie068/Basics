@@ -3,24 +3,32 @@
 // 导入 user 操作 sql 逻辑，可不再拆分出去，直接写在该文件中
 const { createUser } = require("../service/user.service");
 
+// 导入 错误类型
+const { userRegisterError } = require("../constant/err.type");
+
 class UserController {
   // 注册
   async register(ctx, next) {
     // 1.获取数据
     const { user_name, password } = ctx.request.body;
 
-    // 2.操作数据库
-    const res = await createUser(user_name, password);
+    try {
+      // 2.操作数据库
+      const res = await createUser(user_name, password);
 
-    // 3. 返回结果
-    ctx.body = {
-      code: 0,
-      message: "用户注册成功",
-      result: {
-        id: res.id,
-        user_name: res.user_name,
-      },
-    };
+      // 3. 返回结果
+      ctx.body = {
+        code: 0,
+        message: "用户注册成功",
+        result: {
+          id: res.id,
+          user_name: res.user_name,
+        },
+      };
+    } catch (err) {
+      console.log("err：", err);
+      ctx.app.emit("error", userRegisterError, ctx);
+    }
   }
 
   // 登录

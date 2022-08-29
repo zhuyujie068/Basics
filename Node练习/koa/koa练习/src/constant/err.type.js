@@ -1,4 +1,4 @@
-// 统一处理 提示消息
+// 统一处理 提示消息（类型）
 
 module.exports = {
   userFormateError: {
@@ -11,4 +11,9 @@ module.exports = {
     message: '用户已经存在',
     result: '',
   },
+  userRegisterError:{
+    code: '10003',
+    message: '用户注册错误',
+    result: '',
+  }
 }

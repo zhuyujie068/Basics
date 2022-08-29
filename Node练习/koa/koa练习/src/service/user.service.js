@@ -10,6 +10,8 @@ class UserService {
     const res = await User.create({ user_name, password });
     console.log(res);
 
+    // console.log(object1111111); // 模拟（创造） 错误
+
     // return '写入数据库成功'
     return res.dataValues;
   }
@@ -18,10 +20,10 @@ class UserService {
   async getUerInfo({ id, user_name, password, is_admin }) {
     const whereOpt = {};
 
-    id & Object.assign(whereOpt, { id });
-    user_name & Object.assign(whereOpt, { user_name });
-    password & Object.assign(whereOpt, { password });
-    is_admin & Object.assign(whereOpt, { is_admin });
+    id && Object.assign(whereOpt, { id });
+    user_name && Object.assign(whereOpt, { user_name });
+    password && Object.assign(whereOpt, { password });
+    is_admin && Object.assign(whereOpt, { is_admin });
 
     const res = await User.findOne({
       attributes: ["id", "user_name", "password", "is_admin"],
