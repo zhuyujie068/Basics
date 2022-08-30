@@ -34,7 +34,7 @@ interface Person {
 
 
 
-// interface 接口 还可以使用 extends 进行继承
+// interface 接口 还可以使用 extends（衣克丝但丝） 进行继承
 interface Teacher extends Person {
     teach(): string
 }

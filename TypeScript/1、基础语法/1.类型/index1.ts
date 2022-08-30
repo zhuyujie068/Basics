@@ -40,7 +40,7 @@
         布尔值                          boolean
         数字                            number
         字符串                          string
-        表示没有任何类型                 void
+        表示没有任何类型                 void （摸尾的）
         null                            null
         undefined                       undefined
         symbol                          symbol
@@ -60,7 +60,7 @@
                 与 any 不同的是，unknown 在类型上更安全。不能把 unknown 赋值给除了 any 之外任何其他类型，反过来其他类型都可以赋值给 unknown。
     
             
-        3. never
+        3. never （难波）
             never 表示永远不会发生值的类型。函数因为永远不会有返回值（如果函数代码中是一个死循环），所以它的返回值类型就是 never。
                 never 是所有类型的子类型，它可以给所有类型赋值，但是反过来，除了 never 自身以外，其他类型（包括 any 在内的类型）都不能为 never 类型赋值。
 
