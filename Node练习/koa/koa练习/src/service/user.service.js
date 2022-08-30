@@ -16,7 +16,7 @@ class UserService {
     return res.dataValues;
   }
 
-  // 查询 参数是否存在
+  // 根据 参数 查询 信息是否存在 , 返回 详情
   async getUerInfo({ id, user_name, password, is_admin }) {
     const whereOpt = {};
 

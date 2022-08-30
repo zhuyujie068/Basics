@@ -1,10 +1,14 @@
 // user router 控制器 ， 用来存放 方法
 
 // 导入 user 操作 sql 逻辑，可不再拆分出去，直接写在该文件中
-const { createUser } = require("../service/user.service");
+const { createUser, getUerInfo } = require("../service/user.service");
 
 // 导入 错误类型
 const { userRegisterError } = require("../constant/err.type");
+
+// 引入 jsonwebtoken 用来生成 token
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = require("../config/default");
 
 class UserController {
   // 注册
@@ -33,7 +37,24 @@ class UserController {
 
   // 登录
   async login(ctx, next) {
-    ctx.body = "登录成功";
+    const { user_name } = ctx.request.body;
+
+    // 1. 获取用户信息(在token的payload中, 记录id, user_name, is_admin)
+    try {
+      // 从返回结果对象中剔除password属性, 将剩下的属性放到res对象
+      const { password, ...res } = await getUerInfo({ user_name });
+
+      ctx.body = {
+        code: 0,
+        message: "用户登录成功",
+        result: {
+          // jwt.sign(携带信息, 私钥, 过去时间（可选，1d 代表过期时间为一天）)
+          token: jwt.sign(res, JWT_SECRET, { expiresIn: '1d' }),
+        },
+      };
+    } catch (error) {
+      console.error('用户导入失败',error);
+    }
   }
 }
 
