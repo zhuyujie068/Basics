@@ -6,7 +6,14 @@ const bcrypt = require("bcryptjs");
 const { getUerInfo } = require("../service/user.service");
 
 // 导入错误类型
-const { userFormateError, userAlreadyExited, userRegisterError } = require("../constant/err.type");
+const {
+  userFormateError,
+  userAlreadyExited,
+  userRegisterError,
+  userDoesNotExist,
+  invalidPassword,
+  userLoginError,
+} = require("../constant/err.type");
 
 // 合法性 （判断需要传入的参数是否合法）
 const userValidator = async (ctx, next) => {
@@ -20,7 +27,7 @@ const userValidator = async (ctx, next) => {
   await next();
 };
 
-// 合理性（判断 新增的数据是否符合 需求）
+// 合理性（判断 新增用户 的数据是否符合 需求）
 const verifyUser = async (ctx, next) => {
   const { user_name } = ctx.request.body;
 
@@ -54,8 +61,36 @@ const crpytPassword = async (ctx, next) => {
   await next();
 };
 
+// 检验 登录 信息是否正确
+const verifyLogin = async (ctx, next) => {
+  const { user_name, password } = ctx.request.body;
+
+  try {
+    const res = await getUerInfo({ user_name });
+    // 1.判断用户是否存在
+    if (!res) {
+      console.error("用户不存在", { user_name });
+      ctx.app.emit("error", userDoesNotExist, ctx);
+      return;
+    }
+
+    // 2.判断密码是否正确
+    if (!bcrypt.compareSync(password, res.password)) {
+      ctx.app.emit("error", invalidPassword, ctx);
+      return;
+    }
+  } catch (error) {
+    console.error(error);
+    ctx.app.emit("error", userLoginError, ctx);
+    return;
+  }
+
+  await next();
+};
+
 module.exports = {
   userValidator,
   verifyUser,
   crpytPassword,
+  verifyLogin,
 };
