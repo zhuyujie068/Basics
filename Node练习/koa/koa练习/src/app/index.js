@@ -11,6 +11,7 @@ app.use(KoaBody()) // 需要在所有 路由处理 之前进行注册该中间�
 // 将 router 按模块进行拆分，发布后期维护  (多个 router 可以使用自动导入)
 // 导入 user 模块 的 router
 const userRouter = require('../router/user.router')
+const goodsRoute = require('../router/goods.router')
 
 // 中间件，use 必须接收一个函数
 app
@@ -21,7 +22,10 @@ app
     // throw: true, // 抛出错误，代替设置响应头状态
     // notImplemented: () => '不支持当前请求所需要的功能',
     // methodNotAllowed: () => '不支持的请求方式'
-  }));
+  }))
+
+  .use(goodsRoute.routes()) 
+ 
 
 // .use((ctx,next)=>{
 //   ctx.body = 'hello world'
