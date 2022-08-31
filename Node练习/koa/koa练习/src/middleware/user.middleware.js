@@ -1,4 +1,4 @@
-// 拆分一个中间件层, 封装多个中间件函数，进行检验 (可以不拆，直接在 user.controller 中进行判断)
+// 拆分一个中间件层, 封装多个中间件函数，进行逻辑处理 (可以不拆，直接在 user.controller 中进行判断，同一个逻辑有在多处使用，建议 成中间件 进行逻辑复用)
 
 // 导入 bcrypt 进行密码加密
 const bcrypt = require("bcryptjs");
@@ -8,6 +8,7 @@ const { getUerInfo } = require("../service/user.service");
 // 导入错误类型
 const {
   userFormateError,
+  passwordIsEmpty,
   userAlreadyExited,
   userRegisterError,
   userDoesNotExist,
@@ -48,9 +49,15 @@ const verifyUser = async (ctx, next) => {
   await next();
 };
 
-// 将密码进行 bcrypt 加密
+// 将 密码 进行 bcrypt 加密
 const crpytPassword = async (ctx, next) => {
   const { password } = ctx.request.body;
+
+  if (!password) {
+    console.error("密码为空", ctx.request.body);
+    ctx.app.emit("error", passwordIsEmpty, ctx);
+    return;
+  }
 
   const salt = bcrypt.genSaltSync(10);
 
