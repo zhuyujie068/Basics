@@ -1,6 +1,6 @@
 const path = require("path");
 
-const { fileUploadError } = require("../constant/err.type");
+const { fileUploadError, unSupportedFileType } = require("../constant/err.type");
 class GoodsController {
   async upload(ctx, next) {
     try {
@@ -8,7 +8,15 @@ class GoodsController {
       console.log(ctx.request.files.file);
 
       const { file } = ctx.request.files;
+
+      const fileTypes = ["image/jpeg", "image/png"]; // 允许上传的文件类型
+
+      // 不推荐在此 做文件上传类型 判断，因为，到此处时，文件已经上传到 服务器 了，
       if (file) {
+        if (!fileTypes.includes(file.mimetype)) {
+          return ctx.app.emit("error", unSupportedFileType, ctx);
+        }
+
         ctx.body = {
           code: 0,
           message: "商品图片上传成功",

@@ -21,6 +21,8 @@ app.use(
       uploadDir: path.join(__dirname, "../upload"),
       // 保留后缀名
       keepExtensions: true,
+      // 是否允许上传多个文件，默认 true
+      multiples:true,
       // 文件上传大小限制
       maxFieldsSize: 10 * 1024 * 1024, 
       onFileBegin: (name, file) => {
