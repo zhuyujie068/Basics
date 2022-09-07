@@ -18,6 +18,21 @@ const validator = async (ctx, next) => {
   await next();
 };
 
+const validatorId = async (ctx, next) => {
+  try {
+    ctx.verifyParams({
+      id: { type: "string", required: true }, // 商品 id
+    });
+  } catch (error) {
+    console.error("error", error);
+    goodsFormatError.result = error;
+    return ctx.app.emit("error", goodsFormatError, ctx);
+  }
+
+  await next();
+};
+
 module.exports = {
   validator,
+  validatorId,
 };

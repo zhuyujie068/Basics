@@ -1,8 +1,13 @@
 const path = require("path");
 
-const { createGoods } = require("../service/goods.service");
+const { createGoods, updateGoods, removeGoods } = require("../service/goods.service");
 
-const { fileUploadError, unSupportedFileType, publishGoodsError } = require("../constant/err.type");
+const {
+  fileUploadError,
+  unSupportedFileType,
+  publishGoodsError,
+  invalidGoodsID,
+} = require("../constant/err.type");
 class GoodsController {
   async upload(ctx, next) {
     try {
@@ -47,6 +52,40 @@ class GoodsController {
     } catch (error) {
       console.error("error", error);
       return ctx.app.emit("error", publishGoodsError, ctx);
+    }
+  }
+
+  async update(ctx, next) {
+    try {
+      let res = await updateGoods(ctx.params.id, ctx.request.body); // ctx.params.id 从 url 上面取 id
+      if (res) {
+        ctx.body = {
+          code: 0,
+          message: "修改商品成功",
+          result: "",
+        };
+      } else {
+        return ctx.app.emit("error", invalidGoodsID, ctx);
+      }
+    } catch (error) {
+      console.error("error", error);
+    }
+  }
+
+  async remove(ctx, next) {
+    try {
+      let res = await removeGoods(ctx.request.body.id);
+      if (res) {
+        ctx.body = {
+          code: 0,
+          message: "删除商品成功",
+          result: "",
+        };
+      } else {
+        return ctx.app.emit("error", invalidGoodsID, ctx);
+      }
+    } catch (error) {
+      console.error("error", error);
     }
   }
 }
