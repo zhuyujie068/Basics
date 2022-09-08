@@ -1,6 +1,6 @@
 const path = require("path");
 
-const { createGoods, updateGoods, removeGoods, putawayGoods } = require("../service/goods.service");
+const { createGoods, updateGoods, removeGoods, putawayGoods,findGoods } = require("../service/goods.service");
 
 const {
   fileUploadError,
@@ -118,6 +118,25 @@ class GoodsController {
       } else {
         return ctx.app.emit("error", invalidGoodsID, ctx);
       }
+    } catch (error) {
+      console.error("error", error);
+    }
+  }
+
+  async findAll(ctx) {
+    try {
+      // 1、解析参数 （ pageNum、pageSize ） 
+      const { pageNum = 1, pageSize = 10 } = ctx.request.query; // get 请求是从 ctx.request.query 中获取参数
+
+      // 2、调用数据处理的相关方法
+      const res = await findGoods(pageNum,pageSize)
+
+      // 3、返回结果
+      ctx.body = {
+        code: 0,
+        message: "上架商品成功",
+        result: res,
+      };
     } catch (error) {
       console.error("error", error);
     }
