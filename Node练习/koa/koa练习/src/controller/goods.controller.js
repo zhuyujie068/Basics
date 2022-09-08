@@ -1,6 +1,6 @@
 const path = require("path");
 
-const { createGoods, updateGoods, removeGoods } = require("../service/goods.service");
+const { createGoods, updateGoods, removeGoods, putawayGoods } = require("../service/goods.service");
 
 const {
   fileUploadError,
@@ -79,6 +79,40 @@ class GoodsController {
         ctx.body = {
           code: 0,
           message: "删除商品成功",
+          result: "",
+        };
+      } else {
+        return ctx.app.emit("error", invalidGoodsID, ctx);
+      }
+    } catch (error) {
+      console.error("error", error);
+    }
+  }
+
+  async close(ctx, next) {
+    try {
+      let res = await removeGoods(ctx.params.id);
+      if (res) {
+        ctx.body = {
+          code: 0,
+          message: "下架商品成功",
+          result: "",
+        };
+      } else {
+        return ctx.app.emit("error", invalidGoodsID, ctx);
+      }
+    } catch (error) {
+      console.error("error", error);
+    }
+  }
+
+  async putaway(ctx, next) {
+    try {
+      const res = await putawayGoods(ctx.params.id);
+      if (res) {
+        ctx.body = {
+          code: 0,
+          message: "上架商品成功",
           result: "",
         };
       } else {

@@ -14,6 +14,11 @@ class GoodsService {
     const res = await Goods.destroy({ where: { id } });
     return res > 0 ? true : false;
   }
+
+  async putawayGoods(id) {
+    const res = await Goods.restore({ where: { id } });
+    return res > 0 ? true : false;
+  }
 }
 
 module.exports = new GoodsService();
