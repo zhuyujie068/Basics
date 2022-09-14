@@ -1,4 +1,11 @@
-const { createOrUpdate, findCarts, updateCarts } = require("../service/cart.service");
+const {
+  createOrUpdate,
+  findCarts,
+  updateCarts,
+  removeCarts,
+  selectAllCarts,
+  unselectAllCarts
+} = require("../service/cart.service");
 const { cartFormatError } = require("../constant/err.type");
 
 class CartController {
@@ -56,10 +63,55 @@ class CartController {
       result: res,
     };
 
-    if(!res){
-      ctx.body.message="没有找到数据，更新失败"
+    if (!res) {
+      ctx.body.message = "没有找到数据，更新失败";
     }
+  }
 
+  // 删除购物车数据
+  async remove(ctx) {
+    const { ids } = ctx.request.body;
+
+    if (ids.length) {
+      const res = await removeCarts(ids);
+
+      ctx.body = {
+        code: 0,
+        message: "删除成功",
+        result: res,
+      };
+    } else {
+      ctx.body = {
+        code: 0,
+        message: "ids不能为空",
+      };
+    }
+  }
+
+  // 全选
+  async selectAll(ctx) {
+    const user_id = ctx.state.user.id;
+
+    const res = await selectAllCarts(user_id);
+
+    ctx.body = {
+      code: 0,
+      message: "全部选中",
+      result: res,
+    };
+  }
+
+  // 全部取消
+  async unselectAll(ctx) {
+    const user_id = ctx.state.user.id;
+
+    const res = await unselectAllCarts(user_id);
+
+    ctx.body = {
+      code: 0,
+      message: "已全部取消",
+      result: res,
+    };
   }
 }
 
