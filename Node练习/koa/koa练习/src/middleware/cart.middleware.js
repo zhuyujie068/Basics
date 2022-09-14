@@ -1,18 +1,18 @@
-const { invalidGoodsID } = require("../constant/err.type");
+const { cartFormatError } = require("../constant/err.type");
 
-// 参数检验
-const validator = async (ctx, next) => {
-  try {
-    ctx.verifyParams({
-      goods_id: "number",
-    });
-  } catch (error) {
-    console.error("error", error);
-    invalidGoodsID.result = error;
-    return ctx.app.emit("error", invalidGoodsID, ctx);
-  }
+// 参数检验 
+const validator = rules => { // rules 需要检验的规则
+  return async (ctx, next) => {
+    try {
+      ctx.verifyParams(rules);
+    } catch (err) {
+      console.error(err);
+      cartFormatError.result = err;
+      return ctx.app.emit("error", cartFormatError, ctx);
+    }
 
-  await next();
+    await next();
+  };
 };
 
 module.exports = {
