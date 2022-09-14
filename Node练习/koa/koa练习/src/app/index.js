@@ -5,16 +5,20 @@ const path = require("path");
 const Koa = require("koa");
 const app = new Koa(); // 创建 koa 应用
 
-// 引入 koa-body
+/*
+  引入 koa-body  https://www.npmjs.com/package/koa-body 
+*/
 const KoaBody = require("koa-body");
 // 需要在所有 路由处理 之前进行注册 koa-body 中间件
 app.use(
   KoaBody({
     multipart: true, // 开启文件上传
     // json: true, // 是否解析 json 请求体，默认 true
+
     formidable: {
       // 文件上传的一些配置
-      // 在配置选项 option 里，不推荐使用相对路径（例：uploadDir:"../upload"），应该使用绝对路径（例：path.join(__dirname, "../upload")），在 option 里的相对路径，不是相对的当前文件，而是相对 process.cwd() (项目进程运行地址)
+
+      // 在配置 选项（option） 里的路径时，不推荐使用相对路径（例：uploadDir:"../upload"），应该使用绝对路径（例：path.join(__dirname, "../upload")），在 option 里的相对路径，不是相对的当前文件，而是相对 process.cwd() (项目进程运行地址)
 
       // 上传存放的路劲
       // uploadDir:"../upload",
@@ -41,6 +45,14 @@ app.use(
         console.log(err);
       },
     },
+
+    /*
+      strict {Boolean} 严格模式 如果启用，则不解析 GET、HEAD、DELETE 请求，默认true ，
+      只解析 POST、PUT、PATCH 请求，解析后 可以从 ctx.request.body 获取到 参数。
+
+      parsedMethods { String[] } 声明将解析正文的 HTTP 方法，默认值['POST', 'PUT', 'PATCH']。替换strict选项。
+    */
+    parsedMethods: ["POST", "PUT", "PATCH", "GET"],
   })
 );
 
