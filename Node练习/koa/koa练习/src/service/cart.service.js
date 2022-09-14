@@ -29,12 +29,12 @@ class CartService {
   async findCarts(pageNum, pageSize) {
     const offset = (pageNum - 1) * pageSize;
     const { count, rows } = await Cart.findAndCountAll({
-      attributes: ["id", "number", "selected"],
-      offset: offset,
+      attributes: ["id", "number", "selected"], // attributes 选取表中的特定列
+      offset: offset, // 使用 limit 和 offset 参数可以进行限制和分页
       limit: pageSize * 1,
       include: {
         model: Goods,
-        as: "goods_info",
+        as: "goods_info", // as 别名
         attributes: ["id", "goods_name", "goods_price", "goods_img"],
       },
     });

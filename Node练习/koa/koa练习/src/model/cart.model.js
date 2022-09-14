@@ -29,11 +29,14 @@ const Cart = seq.define("zd_carts", {
   },
 });
 
-// 3. 同步数据(建表)
-// Cart.sync({ force: true })
-Cart.belongsTo(Goods, {
-  foreignKey: "goods_id",
+// 关联表
+Cart.belongsTo(Goods, { 
+  foreignKey: "goods_id",  // 将 Cart（zd_carts）表 中的 goods_id 关联为 Goods（zd_goods）表的 外键
   as: "goods_info",
 });
+
+// 3. 同步数据(建表)
+// Cart.sync({ force: true })
+
 // 4. 导出Cart模型
 module.exports = Cart;
