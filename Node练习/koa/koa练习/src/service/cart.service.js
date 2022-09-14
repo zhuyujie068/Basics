@@ -49,9 +49,11 @@ class CartService {
   async updateCarts(params) {
     const { id, number, selected } = params;
 
+    // 通过主键来查询一条记录
     const res = await Cart.findByPk(id);
-    if (!res) return "";
+    if (!res) return false; // 没有 数据 则返回
 
+    // 有 数据 ，则更新 数据
     number !== undefined ? (res.number = number) : "";
     if (selected !== undefined) {
       res.selected = selected;
