@@ -49,7 +49,7 @@ class UserController {
         message: "用户登录成功",
         result: {
           // jwt.sign(携带信息, 私钥, 过去时间（可选，1d 代表过期时间为一天, 10  代表 10秒）)
-          token: jwt.sign(res, JWT_SECRET, { expiresIn: "1d" }),
+          token: jwt.sign(res, JWT_SECRET, { expiresIn: "100d" }),
         },
       };
     } catch (error) {
