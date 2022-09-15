@@ -9,7 +9,7 @@ const { auth } = require("../middleware/auth.middleware");
 const { validator } = require("../middleware/addr.middleware");
 
 // 控制器
-const { create, findAll,update } = require("../controller/addr.controller");
+const { create, findAll,update,remove,setDefault } = require("../controller/addr.controller");
 
 // 3、编写路由规则
 
@@ -28,7 +28,7 @@ router.post(
 router.get("/list", auth, findAll); // 获取地址列表
 
 // 修改地址
-router.post(
+router.put(
   "/revamp/:id",
   auth,
   validator({
@@ -38,6 +38,12 @@ router.post(
   }),
   update
 ); 
+
+// 删除地址
+router.delete("/delete/:id",auth,remove)
+
+// 设置默认地址
+router.patch('/default/:id',auth,setDefault)
 
 // 4、导出 router 对象
 module.exports = router;
