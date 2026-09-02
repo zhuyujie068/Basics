@@ -10,7 +10,7 @@ type text2 = string;
 
 
 /*
-    interface 与 type 的区别（能用 interface 就用 interface ，不行时再使用 type）：interface只能表示function，object和class类型，type除了这些类型还可以表示其他类型
+    interface 与 type 的区别（能用 interface 就用 interface ，不行时再使用 type）：interface只能表示函数（function，object和class类型），type除了这些类型还可以表示其他类型，如基础类型。
 
     interface创建了一种新的类型，而 type 仅仅是别名，是一种引用；
     如果 type 使用了 union operator （|） 操作符，则不能将 type implements 到 class 上；

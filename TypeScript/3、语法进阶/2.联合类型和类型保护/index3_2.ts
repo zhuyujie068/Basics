@@ -30,9 +30,8 @@ function trainAnial(animal: Bird | Dog) {
 }
 
 
-
+// 方法二：通过 in 语法来做类型保护
 function trainAnialSecond(animal: Bird | Dog) {
-    // 方法二：通过 in 语法来做类型保护
     // 通过判断传递的参数中有没有其中的属性或者方法
     if ('sing' in animal) { // 判断传递的 animal 是属于那个类型 其中有没有 sing 方法
         animal.sing();
